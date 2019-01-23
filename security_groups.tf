@@ -20,6 +20,7 @@ resource "aws_security_group_rule" "redis_ingress" {
 }
 
 resource "aws_security_group_rule" "redis_networks_ingress" {
+  count             = "${length(var.custom_redis_sg) == 1 ? 1 : 0}"
   type              = "ingress"
   from_port         = "${var.redis_port}"
   to_port           = "${var.redis_port}"
