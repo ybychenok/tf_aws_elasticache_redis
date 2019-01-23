@@ -96,3 +96,8 @@ variable "tags" {
   description = "Tags for redis nodes"
   default     = {}
 }
+
+variable "custom_redis_sg" {
+  description = "Custom sucurity group for redis nodes"
+  default     = 0
+}
