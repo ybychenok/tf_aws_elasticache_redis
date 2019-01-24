@@ -21,3 +21,7 @@ output "port" {
 output "endpoint" {
   value = "${aws_elasticache_replication_group.redis.primary_endpoint_address}"
 }
+
+output "custom_redis_sg" {
+  value = "${var.custom_redis_sg}"
+}
