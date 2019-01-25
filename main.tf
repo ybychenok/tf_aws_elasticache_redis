@@ -1,6 +1,11 @@
-# locals {
-#   sg_group = "${length(var.custom_redis_sg) > 0 ? var.custom_redis_sg : aws_security_group.redis_security_group.id}"
-# }
+locals {
+  which_sg_to_use = {
+    outside_sg = "${list(var.custom_redis_sg)}"
+    inside_sg  = "${coalescelist(aws_security_group.redis_security_group.*.id, list(""))}"
+  }
+  sg_var       = "${length(var.custom_redis_sg) > 0 ? "outside_sg" : "inside_sg"}"
+
+}
 
 data "aws_vpc" "vpc" {
   id = "${var.vpc_id}"
@@ -16,9 +21,7 @@ resource "aws_elasticache_replication_group" "redis" {
   port                          = "${var.redis_port}"
   parameter_group_name          = "${aws_elasticache_parameter_group.redis_parameter_group.id}"
   subnet_group_name             = "${aws_elasticache_subnet_group.redis_subnet_group.id}"
-  # security_group_ids            = ["${aws_security_group.redis_security_group.id}"]
-  security_group_ids            = ["${coalesce(var.custom_redis_sg, aws_security_group.redis_security_group.id)}"]
-  # security_group_ids            = ["${local.sg_group}"]
+  security_group_ids            = ["${local.which_sg_to_use[local.sg_var]}"]
   apply_immediately             = "${var.apply_immediately}"
   maintenance_window            = "${var.redis_maintenance_window}"
   snapshot_window               = "${var.redis_snapshot_window}"
