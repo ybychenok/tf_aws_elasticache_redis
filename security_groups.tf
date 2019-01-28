@@ -16,8 +16,6 @@ resource "aws_security_group_rule" "redis_ingress" {
   to_port                  = "${var.redis_port}"
   protocol                 = "tcp"
   source_security_group_id = "${element(var.allowed_security_groups, count.index)}"
-  #security_group_id        = "${aws_security_group.redis_security_group.*.id[0]}"
-  #security_group_id        = "${coalesce((join(aws_security_group.redis_security_group.*.id)),"")}"
   security_group_id        = "${join("",(coalescelist(local.which_sg_to_use[local.sg_var], list(""))))}"
   depends_on               = ["aws_security_group.redis_security_group"]
 }
@@ -28,7 +26,6 @@ resource "aws_security_group_rule" "redis_networks_ingress" {
   to_port           = "${var.redis_port}"
   protocol          = "tcp"
   cidr_blocks       = ["${var.allowed_cidr}"]
-  #security_group_id = "${aws_security_group.redis_security_group.*.id[0]}"
   security_group_id = "${join("",(coalescelist(local.which_sg_to_use[local.sg_var], list(""))))}"
   depends_on        = ["aws_security_group.redis_security_group"]
 }
