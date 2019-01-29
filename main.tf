@@ -4,7 +4,6 @@ locals {
     inside_sg  = "${coalescelist(aws_security_group.redis_security_group.*.id, list(""))}"
   }
   sg_var       = "${length(var.custom_redis_sg) > 0 ? "outside_sg" : "inside_sg"}"
-
 }
 
 data "aws_vpc" "vpc" {

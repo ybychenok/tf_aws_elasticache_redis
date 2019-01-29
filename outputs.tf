@@ -25,3 +25,15 @@ output "endpoint" {
 output "custom_redis_sg" {
   value = "${var.custom_redis_sg}"
 }
+
+output "allowed_security_groups" {
+  value = "${var.allowed_security_groups}"
+}
+
+output "allowed_sgs_str" {
+  value = "${local.allowed_sgs_str}"
+}
+
+output "allowed_sgs" {
+  value = "${local.allowed_sgs}"
+}
